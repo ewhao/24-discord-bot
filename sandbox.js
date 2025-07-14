@@ -4,9 +4,26 @@ class game {
     }
 
     startGame() {
+        const readline = require('readline');
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+
         this.getValidSet();
-        console.log(this.currentSet);
-        // console.log(this.currentSolutions);
+        // console.log(this.currentSet);
+
+        rl.question(`${this.currentSet}\n`, (input) => {
+            if (input == "/quit") {
+                rl.close();
+            }
+            if (input == "/giveup") {
+                console.log(this.currentSolutions);
+            } else {
+                console.log('got it');
+            }
+        });
+
     }
 
     // Getters and setters
