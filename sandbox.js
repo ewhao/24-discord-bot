@@ -19,8 +19,10 @@ class game {
             }
             if (input == "/giveup") {
                 console.log(this.currentSolutions);
+                rl.close();
             } else {
-                console.log('got it');
+                console.log(this.checkAnswer(input));
+                rl.close();
             }
         });
 
@@ -127,6 +129,10 @@ class game {
 
         let solutions = getSolutions(nums);
         return solutions;
+    }
+
+    checkAnswer(answer) {
+        return("sfd");
     }
 }
 
