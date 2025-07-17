@@ -1,5 +1,3 @@
-const { default: Mexp } = require('math-expression-evaluator');
-
 class game {
     constructor(player) {
         this.player = player;
@@ -138,11 +136,16 @@ class game {
     }
 
     checkAnswer(answer) {
-        const mexp = new Mexp();
-        if (mexp.eval(answer) == 24) {
-            return("yippee");
+        const Parser = require('expr-eval').Parser;
+        try {
+            if (Parser.evaluate(answer) == 24) {
+                return("yippee");
+            }
+            return("boo");            
+        } catch (error) {
+            return("bad input");
         }
-        return("boo");
+
     }
 }
 
