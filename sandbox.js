@@ -1,31 +1,37 @@
+const { default: Mexp } = require('math-expression-evaluator');
+
 class game {
     constructor(player) {
         this.player = player;
     }
 
     startGame() {
+        console.log("Starting game");
         const readline = require('readline');
         const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
 
+        this.playRound(rl);
+    }
+
+    playRound(rl) {
         this.getValidSet();
         // console.log(this.currentSet);
 
         rl.question(`${this.currentSet}\n`, (input) => {
-            if (input == "/quit") {
+            if (input == "q") {
+                console.log("Thanks for playing!");
                 rl.close();
-            }
-            if (input == "/giveup") {
+            } else if (input == "s") {
                 console.log(this.currentSolutions);
-                rl.close();
+                this.playRound(rl);
             } else {
                 console.log(this.checkAnswer(input));
-                rl.close();
+                this.playRound(rl);
             }
         });
-
     }
 
     // Getters and setters
@@ -132,7 +138,11 @@ class game {
     }
 
     checkAnswer(answer) {
-        return("sfd");
+        const mexp = new Mexp();
+        if (mexp.eval(answer) == 24) {
+            return("yippee");
+        }
+        return("boo");
     }
 }
 
