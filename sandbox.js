@@ -136,6 +136,18 @@ class game {
     }
 
     checkAnswer(answer) {
+        // check input format
+        let nums = answer.match(/\d+/g);
+        for (var i = 0; i < nums.length; i++) { // answer contains numbers not from set
+            if (!this.getCurrentSet().includes(parseInt(nums[i]))) {
+                return("bad input: must use numbers in given set");
+            }
+        }
+        if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) { // answer contains non-numbers or non +-*/ operators
+            return("bad input: must use +-*/ operators only");
+        }
+        // answer contains each number of set exactly once
+
         const Parser = require('expr-eval').Parser;
         try {
             if (Parser.evaluate(answer) == 24) {
