@@ -1,8 +1,4 @@
 class game {
-    constructor(player) {
-        this.player = player;
-    }
-
     startGame() {
         console.log("Starting game");
         const readline = require('readline');
