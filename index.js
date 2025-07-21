@@ -7,7 +7,13 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { getValidSet, checkAnswer } = require('./game');
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+const client = new Client({ 
+	intents: [
+		GatewayIntentBits.Guilds, 
+		GatewayIntentBits.GuildMessages, 
+		GatewayIntentBits.MessageContent
+	] 
+});
 
 // Command handler - dynamically retrieve command files
 client.commands = new Collection();
@@ -43,6 +49,7 @@ for (const file of eventFiles) {
 	}
 }
 
+// Start game of 24
 client.on('messageCreate', async message => {
 	if (message.content == "Starting game of 24.") {
 		const set = getValidSet();
@@ -50,8 +57,7 @@ client.on('messageCreate', async message => {
 
 		let setMessage = await message.channel.send(set.toString().replaceAll(',', ' '));
 		const collectionFilter = m => {
-			console.log(`m: ${m}`);
-			return (!m.author.bot);
+			return (!m.author.bot && checkAnswer(m.content, set) == "yippee");
 		}
 
 		message.channel.awaitMessages({
@@ -61,15 +67,14 @@ client.on('messageCreate', async message => {
 			errors: ['time']
 		}).then(collected => {
 			if (collected.first()) {
-				console.log(`collected: ${collected.first()}`);
-				console.log(`collected author: ${collected.first().author.id}`);
-				message.reply('yippee');
+				console.log(`collected author: ${collected.first().author}`);
+				message.channel.send('yippee');
 			}
 			else {
-				message.reply('boo');
+				message.reply('something went wrong');
 			}
 		}).catch(() => {
-			message.reply('No answer after 30 seconds, solutions are:');
+			message.reply('Ran out of time! Solutions are:');
 		});
 	}
 });

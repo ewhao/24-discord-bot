@@ -1,3 +1,5 @@
+import { Parser } from 'expr-eval';
+
 // Return set that has valid solutions
 export function getValidSet() {
     let set = [];
@@ -87,10 +89,12 @@ export function solveSet(nums) {
 export function checkAnswer(answer, set) {
     console.log(`answer ${answer}`);
     // check input format
-    let nums = answer.match(/\d+/g);
-    for (var i = 0; i < nums.length; i++) { // answer contains numbers not from set
-        if (!set.includes(parseInt(nums[i]))) {
-            return ("bad input: must use numbers in given set");
+    let nums = answer.match(/\d+/g);            // answer contains numbers not from set
+    if (Array.isArray(nums)) {
+        for (var i = 0; i < nums.length; i++) {
+            if (!set.includes(parseInt(nums[i]))) {
+                return ("bad input: must use numbers in given set");
+            }
         }
     }
     if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) { // answer contains non-numbers or non +-*/ operators
@@ -98,7 +102,6 @@ export function checkAnswer(answer, set) {
     }
     // TODO: check answer contains each number of set exactly once
 
-    const Parser = require('expr-eval').Parser;
     try {
         if (Parser.evaluate(answer) == 24) {
             return ("yippee");
