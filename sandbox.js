@@ -132,26 +132,35 @@ class game {
     }
 
     checkAnswer(answer) {
+        console.log(`answer: ${answer}`);
         // check input format
-        let nums = answer.match(/\d+/g);
-        for (var i = 0; i < nums.length; i++) { // answer contains numbers not from set
-            if (!this.getCurrentSet().includes(parseInt(nums[i]))) {
-                return("bad input: must use numbers in given set");
-            }
+        if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) {  // answer contains non-numbers or non +-*/ operators
+            return ("Bad input.");
         }
-        if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) { // answer contains non-numbers or non +-*/ operators
-            return("bad input: must use +-*/ operators only");
+
+        let nums = answer.match(/\d+/g);            // answer contains numbers not from set
+
+        if (nums.sort().join(",") != this.getCurrentSet().sort().join(",")) {
+            return ("Bad input.");
+            /*
+            for (var i = 0; i < nums.length; i++) {
+                if (!tempSet.includes(parseInt(nums[i]))) {
+                    return ("bad input: must use numbers in given set");
+                }
+                tempSet.filter(item => item !== itemToRemove);
+            }*/
         }
-        // answer contains each number of set exactly once
+        
+        // TODO: check answer contains each number of set exactly once
 
         const Parser = require('expr-eval').Parser;
         try {
             if (Parser.evaluate(answer) == 24) {
-                return("yippee");
+                return ("yippee");
             }
-            return("boo");            
+            return ("boo");
         } catch (error) {
-            return("bad input");
+            return ("Error: " + error);
         }
 
     }

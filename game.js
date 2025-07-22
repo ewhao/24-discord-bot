@@ -87,20 +87,18 @@ export function solveSet(nums) {
 }
 
 export function checkAnswer(answer, set) {
-    console.log(`answer ${answer}`);
+    answer = answer.replaceAll('\`', '');
+    console.log(`answer: ${answer}`);
+
     // check input format
-    let nums = answer.match(/\d+/g);            // answer contains numbers not from set
-    if (Array.isArray(nums)) {
-        for (var i = 0; i < nums.length; i++) {
-            if (!set.includes(parseInt(nums[i]))) {
-                return ("bad input: must use numbers in given set");
-            }
-        }
+    if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) {  // answer contains non-numbers or non +-*/ operators
+        return ("Bad input.");
     }
-    if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) { // answer contains non-numbers or non +-*/ operators
-        return ("bad input: must use +-*/ operators only");
+
+    let nums = answer.match(/\d+/g);            // answer does not contain each number of set once
+    if (nums.sort().join(",") != set.sort().join(",")) {
+        return ("Bad input.");
     }
-    // TODO: check answer contains each number of set exactly once
 
     try {
         if (Parser.evaluate(answer) == 24) {
@@ -108,7 +106,7 @@ export function checkAnswer(answer, set) {
         }
         return ("boo");
     } catch (error) {
-        return ("bad input");
+        return ("Bad input.");
     }
 
 }

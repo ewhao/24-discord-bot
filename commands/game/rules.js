@@ -13,7 +13,7 @@ module.exports = {
             "- Each number of four numbers provided in a set must be used exactly once\n" + 
             "- Accepted operations are addition (+), subtraction (-), multiplication (-), " +
             "division(/), and parenthesis(()).\n" +
-            "- Answers should be wrapped in backticks (`) to prevent other markdown from being applied.\n\n" +
+            "- Answers can be wrapped in backticks (`) to prevent other markdown from being applied.\n\n" +
 
             "See [wikipedia](<https://en.wikipedia.org/wiki/24_(puzzle)) to learn more about " +
             "the game and variations.";

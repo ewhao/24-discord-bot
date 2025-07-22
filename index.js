@@ -4,15 +4,15 @@ dotenv.config();
 const fs = require('node:fs'); // file system
 const path = require('node:path'); // path utility
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { getValidSet, checkAnswer } = require('./game');
+const { getValidSet, checkAnswer, solveSet } = require('./game');
 
 // Create a new client instance
-const client = new Client({ 
+const client = new Client({
 	intents: [
-		GatewayIntentBits.Guilds, 
-		GatewayIntentBits.GuildMessages, 
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent
-	] 
+	]
 });
 
 // Command handler - dynamically retrieve command files
@@ -53,28 +53,29 @@ for (const file of eventFiles) {
 client.on('messageCreate', async message => {
 	if (message.content == "Starting game of 24.") {
 		const set = getValidSet();
+		const sols = solveSet(set);
 		console.log(set);
+		console.log(sols)
 
 		let setMessage = await message.channel.send(set.toString().replaceAll(',', ' '));
 		const collectionFilter = m => {
-			return (!m.author.bot && checkAnswer(m.content, set) == "yippee");
+			return (!m.author.bot && checkAnswer(m.content, set)) == "yippee";
 		}
 
 		message.channel.awaitMessages({
 			filter: collectionFilter,
 			max: 1,
-			time: 30000,
+			time: 45000,
 			errors: ['time']
 		}).then(collected => {
 			if (collected.first()) {
-				console.log(`collected author: ${collected.first().author}`);
-				message.channel.send('yippee');
+				collected.first().reply("yippee");
 			}
 			else {
-				message.reply('something went wrong');
+				message.channel.send('something went wrong');
 			}
 		}).catch(() => {
-			message.reply('Ran out of time! Solutions are:');
+			message.channel.send(`Ran out of time! Potential solutions are: \n\`${sols.toString().replaceAll(',', '\n')}\``);
 		});
 	}
 });
