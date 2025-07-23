@@ -14,6 +14,7 @@ export function getValidSet() {
     return null;
 }
 
+// Return set of four random numbers 1-13
 function createSet() {
     let a = Math.ceil(Math.random() * 13);
     let b = Math.ceil(Math.random() * 13);
@@ -22,7 +23,8 @@ function createSet() {
     return [a, b, c, d];
 }
 
-export function solveSet(nums) {
+// Return array of up to 6 possible solutions to given set nums
+export function solveSet(set) {
     let ops = ['+', '-', '*', '/'];
 
     function evalExpression(expr) {
@@ -33,7 +35,7 @@ export function solveSet(nums) {
         }
     }
 
-    function generateExpressions(nums) {
+    function generateExpressions(set) {
         let results = [];
         function permute(arr, chosen = []) {
             if (arr.length === 0) {
@@ -46,12 +48,12 @@ export function solveSet(nums) {
                 }
             }
         }
-        permute(nums);
+        permute(set);
         return results;
     }
 
-    function getSolutions(nums) {
-        let perms = generateExpressions(nums);
+    function getSolutions(set) {
+        let perms = generateExpressions(set);
         let solutions = new Set();
         for (let perm of perms) {
             for (let op1 of ops) {
@@ -82,31 +84,40 @@ export function solveSet(nums) {
         return solutions.size > 0 ? Array.from(solutions) : [];
     }
 
-    let solutions = getSolutions(nums);
+    let solutions = getSolutions(set);
     return solutions;
 }
 
+// Enum of possible results
+export const Results = {
+    CORRECT: 0,
+    INCORRECT: 1,
+    INVALID: 2,
+    ERROR: 3
+};
+
+// Return one of Results after checking given answer for given set
 export function checkAnswer(answer, set) {
+
     answer = answer.replaceAll('\`', '');
     console.log(`answer: ${answer}`);
 
     // check input format
     if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) {  // answer contains non-numbers or non +-*/ operators
-        return ("Bad input.");
+        return (Results.INVALID);
     }
 
     let nums = answer.match(/\d+/g);            // answer does not contain each number of set once
     if (nums.sort().join(",") != set.sort().join(",")) {
-        return ("Bad input.");
+        return (Results.INVALID);
     }
 
     try {
         if (Parser.evaluate(answer) == 24) {
-            return ("yippee");
+            return (Results.CORRECT);
         }
-        return ("boo");
+        return (Results.INCORRECT);
     } catch (error) {
-        return ("Bad input.");
+        return (Results.ERROR);
     }
-
 }

@@ -4,7 +4,7 @@ dotenv.config();
 const fs = require('node:fs'); // file system
 const path = require('node:path'); // path utility
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { getValidSet, checkAnswer, solveSet } = require('./game');
+const { getValidSet, checkAnswer, solveSet, Results } = require('./game');
 
 // Create a new client instance
 const client = new Client({
@@ -59,7 +59,7 @@ client.on('messageCreate', async message => {
 
 		let setMessage = await message.channel.send(set.toString().replaceAll(',', ' '));
 		const collectionFilter = m => {
-			return (!m.author.bot && checkAnswer(m.content, set)) == "yippee";
+			return (!m.author.bot && checkAnswer(m.content, set)) == Results.CORRECT;
 		}
 
 		message.channel.awaitMessages({
@@ -70,9 +70,6 @@ client.on('messageCreate', async message => {
 		}).then(collected => {
 			if (collected.first()) {
 				collected.first().reply("yippee");
-			}
-			else {
-				message.channel.send('something went wrong');
 			}
 		}).catch(() => {
 			message.channel.send(`Ran out of time! Potential solutions are: \n\`${sols.toString().replaceAll(',', '\n')}\``);
