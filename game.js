@@ -90,6 +90,7 @@ export function solveSet(set) {
 
 // Enum of possible results
 export const Results = {
+    QUIT: -1,
     CORRECT: 0,
     INCORRECT: 1,
     INVALID: 2,
@@ -98,7 +99,9 @@ export const Results = {
 
 // Return one of Results after checking given answer for given set
 export function checkAnswer(answer, set) {
-
+    if (answer == "Quitting game. Thanks for playing!") {
+        return Results.QUIT;
+    };
     answer = answer.replaceAll('\`', '');
     console.log(`answer: ${answer}`);
 

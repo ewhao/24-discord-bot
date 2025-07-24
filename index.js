@@ -59,7 +59,8 @@ client.on('messageCreate', async message => {
 
 		let setMessage = await message.channel.send(set.toString().replaceAll(',', ' '));
 		const collectionFilter = m => {
-			return (!m.author.bot && checkAnswer(m.content, set)) == Results.CORRECT;
+			return ((!m.author.bot && checkAnswer(m.content, set) == Results.CORRECT) ||
+				checkAnswer(m.content, set) == Results.QUIT);
 		}
 
 		message.channel.awaitMessages({
@@ -68,7 +69,7 @@ client.on('messageCreate', async message => {
 			time: 45000,
 			errors: ['time']
 		}).then(collected => {
-			if (collected.first()) {
+			if (collected.first().content == Results.CORRECT) {
 				collected.first().reply("yippee");
 			}
 		}).catch(() => {

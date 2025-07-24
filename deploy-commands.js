@@ -45,5 +45,4 @@ const rest = new REST().setToken(process.env.TOKEN);
 		// And of course, make sure you catch and log any errors!
 		console.error(error);
 	}
-
 })();
