@@ -99,13 +99,12 @@ export const Results = {
 
 // Return one of Results after checking given answer for given set
 export function checkAnswer(answer, set) {
-    if (answer == "Quitting game. Thanks for playing!") {
+    if (answer == "Quitting game. Thanks for playing!" || answer == "Starting game of 24.") {
         return Results.QUIT;
     };
-    answer = answer.replaceAll('\`', '');
-    console.log(`answer: ${answer}`);
 
-    // check input format
+    answer = answer.replaceAll('\`', '');       // remove backticks
+
     if (answer.match(/[^0-9\+\-\*\/\(\)]/g)) {  // answer contains non-numbers or non +-*/ operators
         return (Results.INVALID);
     }

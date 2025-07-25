@@ -52,31 +52,33 @@ for (const file of eventFiles) {
 // Start game of 24
 client.on('messageCreate', async message => {
 	if (message.content == "Starting game of 24.") {
-		const set = getValidSet();
-		const sols = solveSet(set);
-		console.log(set);
-		console.log(sols)
-
-		let setMessage = await message.channel.send(set.toString().replaceAll(',', ' '));
-		const collectionFilter = m => {
-			return ((!m.author.bot && checkAnswer(m.content, set) == Results.CORRECT) ||
-				checkAnswer(m.content, set) == Results.QUIT);
-		}
-
-		message.channel.awaitMessages({
-			filter: collectionFilter,
-			max: 1,
-			time: 45000,
-			errors: ['time']
-		}).then(collected => {
-			if (collected.first().content == Results.CORRECT) {
-				collected.first().reply("yippee");
-			}
-		}).catch(() => {
-			message.channel.send(`Ran out of time! Potential solutions are: \n\`${sols.toString().replaceAll(',', '\n')}\``);
-		});
+		playRound(message);
 	}
 });
+
+async function playRound(message) {
+	const set = getValidSet();
+	const sols = solveSet(set);
+	console.log(set);
+	console.log(sols)
+
+	let setMessage = await message.channel.send(`\`${set.toString().replaceAll(',', ' ')}\``);
+
+	const collectionFilter = m => {
+		return (checkAnswer(m.content, set) == Results.CORRECT);
+	}
+
+	message.channel.awaitMessages({ filter: collectionFilter, max: 1, time: 45000, errors: ['time'] })
+		.then(collected => {
+			if (collected.first()) { 				// Handle correct answers
+				collected.first().reply("yippee");
+				playRound(message);
+			}
+		}).catch(() => { 							// Handle timeout
+			setMessage.reply(`Ran out of time! Potential solutions are: \n\`\`\`${sols.toString().replaceAll(',', '\n')}\`\`\``);
+			playRound(message);
+		});
+}
 
 // Log in to Discord with your client's token
 client.login(process.env.TOKEN);
