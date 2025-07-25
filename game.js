@@ -1,5 +1,5 @@
 // Return set that has valid solutions
-export function getValidSet() {
+function getValidSet() {
     let set = [];
     let solutions = [];
     while (solutions.length == 0) {
@@ -22,7 +22,7 @@ function createSet() {
 }
 
 // Return array of up to 6 possible solutions to given set nums
-export function solveSet(set) {
+function solveSet(set) {
     let ops = ['+', '-', '*', '/'];
 
     function evalExpression(expr) {
@@ -87,7 +87,7 @@ export function solveSet(set) {
 }
 
 // Enum of possible results
-export const Results = {
+const Results = {
     QUIT: -1,
     CORRECT: 0,
     INCORRECT: 1,
@@ -96,7 +96,7 @@ export const Results = {
 };
 
 // Return one of Results after checking given answer for given set
-export function checkAnswer(answer, set, Parser) {
+function checkAnswer(answer, set, Parser) {
     if (answer == "Quitting game. Thanks for playing!" || answer == "Starting game of 24.") {
         return Results.QUIT;
     };
@@ -121,3 +121,5 @@ export function checkAnswer(answer, set, Parser) {
         return (Results.ERROR);
     }
 }
+
+module.exports = { getValidSet, solveSet, Results, checkAnswer };

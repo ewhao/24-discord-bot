@@ -4,7 +4,7 @@ dotenv.config();
 const fs = require('node:fs'); // file system
 const path = require('node:path'); // path utility
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { getValidSet, checkAnswer, solveSet, Results } = require('./game.js');
+const { getValidSet, solveSet, checkAnswer, Results } = require('./game.js');
 
 // Create a new client instance
 const client = new Client({
