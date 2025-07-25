@@ -1,5 +1,3 @@
-import { Parser } from 'expr-eval';
-
 // Return set that has valid solutions
 export function getValidSet() {
     let set = [];
@@ -98,7 +96,7 @@ export const Results = {
 };
 
 // Return one of Results after checking given answer for given set
-export function checkAnswer(answer, set) {
+export function checkAnswer(answer, set, Parser) {
     if (answer == "Quitting game. Thanks for playing!" || answer == "Starting game of 24.") {
         return Results.QUIT;
     };

@@ -4,7 +4,7 @@ dotenv.config();
 const fs = require('node:fs'); // file system
 const path = require('node:path'); // path utility
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { getValidSet, checkAnswer, solveSet, Results } = require('./game');
+const { getValidSet, checkAnswer, solveSet, Results } = require('./game.js');
 
 // Create a new client instance
 const client = new Client({
@@ -59,13 +59,12 @@ client.on('messageCreate', async message => {
 async function playRound(message) {
 	const set = getValidSet();
 	const sols = solveSet(set);
-	console.log(set);
-	console.log(sols)
+	const Parser = require('expr-eval').Parser;
 
 	let setMessage = await message.channel.send(`\`${set.toString().replaceAll(',', ' ')}\``);
 	let result;
 	const collectionFilter = m => {
-		result = checkAnswer(m.content, set);
+		result = checkAnswer(m.content, set, Parser);
 		return (result <= Results.CORRECT);
 	}
 
