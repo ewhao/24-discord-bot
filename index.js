@@ -63,18 +63,19 @@ async function playRound(message) {
 	console.log(sols)
 
 	let setMessage = await message.channel.send(`\`${set.toString().replaceAll(',', ' ')}\``);
-
+	let result;
 	const collectionFilter = m => {
-		return (checkAnswer(m.content, set) == Results.CORRECT);
+		result = checkAnswer(m.content, set);
+		return (result <= Results.CORRECT);
 	}
 
 	message.channel.awaitMessages({ filter: collectionFilter, max: 1, time: 45000, errors: ['time'] })
 		.then(collected => {
-			if (collected.first()) { 				// Handle correct answers
+			if (collected.first() && result == Results.CORRECT) {	// Handle correct answers
 				collected.first().reply("yippee");
 				playRound(message);
 			}
-		}).catch(() => { 							// Handle timeout
+		}).catch(() => { 											// Handle timeout
 			setMessage.reply(`Ran out of time! Potential solutions are: \n\`\`\`${sols.toString().replaceAll(',', '\n')}\`\`\``);
 			playRound(message);
 		});
