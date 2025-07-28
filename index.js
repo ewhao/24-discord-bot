@@ -51,7 +51,7 @@ for (const file of eventFiles) {
 
 // Start game of 24
 client.on('messageCreate', async message => {
-	if (message.content == "Starting game of 24.") {
+	if (message.content.includes("Starting game of 24.")) {
 		playRound(message);
 	}
 });
