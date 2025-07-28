@@ -51,7 +51,7 @@ for (const file of eventFiles) {
 
 // Start game of 24
 client.on('messageCreate', async message => {
-	if (message.content.includes("Starting game of 24.")) {
+	if (message.author.bot && message.content.includes("Starting game of 24.")) {
 		playRound(message);
 	}
 });
@@ -64,7 +64,7 @@ async function playRound(message) {
 	let setMessage = await message.channel.send(`\`${set.toString().replaceAll(',', ' ')}\``);
 	let result;
 	const collectionFilter = m => {
-		result = checkAnswer(m.content, set, Parser);
+		result = checkAnswer(m.content, set, Parser, m.author);
 		return (result <= Results.CORRECT);
 	}
 
